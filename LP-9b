@@ -9,7 +9,6 @@ void dfs(int a[20][20], int n, int v) {
             dfs(a, n, i);
     }
 }
-
 int main() {
     int a[20][20], n, i, j, start;
 
