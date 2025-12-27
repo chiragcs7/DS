@@ -7,7 +7,6 @@ struct node {
 };
 struct node *head = NULL;
 
-// Create list
 void create() {
     int n, val;
     printf("Number of nodes: ");
