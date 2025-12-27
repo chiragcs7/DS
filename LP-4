@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *next;
+};
+
+struct node *head = NULL;   // start of list
+
+// Create Linked List (insert at end repeatedly)
+void create() {
+    int n, val;
+    printf("How many nodes to create? ");
+    scanf("%d", &n);
+
+    for(int i = 0; i < n; i++) {
+        printf("Enter value: ");
+        scanf("%d", &val);
+
+        struct node *newnode = (struct node*)malloc(sizeof(struct node));
+        newnode->data = val;
+        newnode->next = NULL;
+
+        if (head == NULL) {
+            head = newnode;
+        } else {
+            struct node *temp = head;
+            while(temp->next != NULL)
+                temp = temp->next;
+            temp->next = newnode;
+        }
+    }
+}
+
+// Insert At First
+void insert_first() {
+    int val;
+    printf("Enter value to insert at first: ");
+    scanf("%d", &val);
+
+    struct node *newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+    newnode->next = head;
+    head = newnode;
+}
+
+// Insert At End
+void insert_end() {
+    int val;
+    printf("Enter value to insert at end: ");
+    scanf("%d", &val);
+
+    struct node *newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+    newnode->next = NULL;
+
+    if (head == NULL)
+        head = newnode;
+    else {
+        struct node *temp = head;
+        while(temp->next != NULL)
+            temp = temp->next;
+        temp->next = newnode;
+    }
+}
+
+// Insert At Any Position (1-based index)
+void insert_pos() {
+    int pos, val;
+    printf("Enter position: ");
+    scanf("%d", &pos);
+    printf("Enter value: ");
+    scanf("%d", &val);
+
+    struct node *newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = val;
+
+    if (pos == 1) {  // insert at first
+        newnode->next = head;
+        head = newnode;
+        return;
+    }
+
+    struct node *temp = head;
+    for(int i = 1; i < pos - 1 && temp != NULL; i++)
+        temp = temp->next;
+
+    if (temp == NULL) {
+        printf("Invalid position!\n");
+        free(newnode);
+        return;
+    }
+
+    newnode->next = temp->next;
+    temp->next = newnode;
+}
+
+// Display Linked List
+void display() {
+    struct node *temp = head;
+    if (head == NULL) {
+        printf("\nList is Empty!\n");
+        return;
+    }
+    printf("\nLinked List: ");
+    while(temp != NULL) {
+        printf("%d -> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    int choice;
+    do {
+        printf("\n--- Singly Linked List Menu ---");
+        printf("\n1. Create");
+        printf("\n2. Insert at First");
+        printf("\n3. Insert at Any Position");
+        printf("\n4. Insert at End");
+        printf("\n5. Display");
+        printf("\n6. Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1: create(); break;
+            case 2: insert_first(); break;
+            case 3: insert_pos(); break;
+            case 4: insert_end(); break;
+            case 5: display(); break;
+            case 6: printf("Exiting...\n"); break;
+            default: printf("Invalid Choice!\n");
+        }
+    } while(choice != 6);
+
+    return 0;
+}
