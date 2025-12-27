@@ -1,0 +1,140 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *prev, *next;
+};
+
+struct node *head = NULL;
+
+// Create list (insert at end)
+void create() {
+    int n, val;
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    for(int i = 0; i < n; i++) {
+        printf("Enter value: ");
+        scanf("%d", &val);
+
+        struct node *newnode = malloc(sizeof(struct node));
+        newnode->data = val;
+        newnode->prev = newnode->next = NULL;
+
+        if(head == NULL)
+            head = newnode;
+        else {
+            struct node *temp = head;
+            while(temp->next != NULL)
+                temp = temp->next;
+            temp->next = newnode;
+            newnode->prev = temp;
+        }
+    }
+}
+
+// Insert to left of a given value
+void insert_left() {
+    int key, val;
+    printf("Enter the value to insert before: ");
+    scanf("%d", &key);
+    printf("Enter new value: ");
+    scanf("%d", &val);
+
+    struct node *temp = head;
+    while(temp != NULL && temp->data != key)
+        temp = temp->next;
+
+    if(temp == NULL) {
+        printf("Value not found!\n");
+        return;
+    }
+
+    struct node *newnode = malloc(sizeof(struct node));
+    newnode->data = val;
+
+    // Insert at beginning
+    if(temp == head) {
+        newnode->prev = NULL;
+        newnode->next = head;
+        head->prev = newnode;
+        head = newnode;
+    } else {
+        newnode->prev = temp->prev;
+        newnode->next = temp;
+        temp->prev->next = newnode;
+        temp->prev = newnode;
+    }
+
+    printf("Inserted successfully.\n");
+}
+
+// Delete based on specific value
+void delete_value() {
+    int key;
+    printf("Enter value to delete: ");
+    scanf("%d", &key);
+
+    struct node *temp = head;
+    while(temp != NULL && temp->data != key)
+        temp = temp->next;
+
+    if(temp == NULL) {
+        printf("Value not found!\n");
+        return;
+    }
+
+    if(temp == head) {               // delete first
+        head = temp->next;
+        if(head) head->prev = NULL;
+    } else if(temp->next == NULL) {  // delete last
+        temp->prev->next = NULL;
+    } else {                         // delete middle
+        temp->prev->next = temp->next;
+        temp->next->prev = temp->prev;
+    }
+
+    printf("Deleted: %d\n", temp->data);
+    free(temp);
+}
+
+// Display list
+void display() {
+    struct node *temp = head;
+    if(head == NULL) {
+        printf("List is Empty!\n");
+        return;
+    }
+    printf("Doubly Linked List: ");
+    while(temp != NULL) {
+        printf("%d <-> ", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    int choice;
+    do {
+        printf("\n--- Doubly Linked List Menu ---");
+        printf("\n1. Create");
+        printf("\n2. Insert to Left of Node");
+        printf("\n3. Delete Specific Value");
+        printf("\n4. Display");
+        printf("\n5. Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1: create(); break;
+            case 2: insert_left(); break;
+            case 3: delete_value(); break;
+            case 4: display(); break;
+            case 5: printf("Exiting...\n"); break;
+            default: printf("Invalid Choice!\n");
+        }
+    } while(choice != 5);
+
+    return 0;
+}
